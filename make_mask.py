@@ -3,8 +3,7 @@ import numpy as np
 
 def	make_mask(array, labels=('yes', 'no'), rule='far'):
 	stack = []
-	result_label1 = []
-	result_label2 = []
+	result = []
 	flag = False
 	for n, item in enumerate(array):
 		if item == labels[0]:
@@ -12,18 +11,19 @@ def	make_mask(array, labels=('yes', 'no'), rule='far'):
 			flag = True
 		if flag and item == labels[1]:
 			if rule == 'close':
-				result_label1.append(stack[-1])
-				result_label2.append(n)
+				result.append(stack[-1])
+				result.append(n)
 				stack = []
 				flag = False
 			elif rule == 'far':
-				result_label1.append(stack[0])
-				result_label2.append(n)
+				result.append(stack[0])
+				result.append(n)
 				stack = []
 				flag = False
+			else:
+				raise ValueError("Not supported rule ", rule)
 	mask = np.zeros(len(array), dtype=int)
-	mask[result_label1] = 1
-	mask[result_label2] = 1
+	mask[result] = 1
 	return mask
 	
 def print_mask(array, mask):
