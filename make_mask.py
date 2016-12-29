@@ -22,16 +22,11 @@ def make_mask(array, labels, rule):
     Supported rules: 'close', 'far_lb1', 'far_lb2', 'v_far'
     Rules represent the distance between the labels - lb1 & lb2
     '''
-    first = True
-    stack = []
     result = []
 
-    for i, item in enumerate(array):
-        if first:
-            stack.append(i)
-            last = item
-            first = False
-            continue
+    stack = [0]
+    last = array[0]
+    for i, item in enumerate(array[1:], 1):
         if item == last:
             stack.append(i)
         else:
@@ -66,7 +61,7 @@ def make_mask(array, labels, rule):
 
 def print_tbl(array, mask):
     print('{:>5} - {:^4} - {:<6}'.format('label', 'mask', 'result'))
-    print('-'*21)
+    print('-' * 21)
     rows = []
     for i, z in enumerate(zip(array, mask)):
         c, m = z
@@ -97,36 +92,36 @@ def main():
     Y_N = np.array(['no', 'no', 'yes', 'yes', 'no', 'no',
                     'yes', 'no', 'no'])
     Y_N_TESTS = (
-      (('no', 'yes'), 'close', np.array([0, 1, 1, 0, 0, 1, 1, 0, 0])),
-      (('no', 'yes'), 'far_lb1', np.array([1, 0, 1, 0, 1, 0, 1, 0, 0])),
-      (('no', 'yes'), 'far_lb2', np.array([0, 1, 0, 1, 0, 1, 1, 0, 0])),
-      (('no', 'yes'), 'v_far', np.array([1, 0, 0, 1, 1, 0, 1, 0, 0])),
-      (('yes', 'no'), 'close', np.array([0, 0, 0, 1, 1, 0, 1, 1, 0])),
-      (('yes', 'no'), 'far_lb1', np.array([0, 0, 1, 0, 1, 0, 1, 1, 0])),
-      (('yes', 'no'), 'far_lb2', np.array([0, 0, 0, 1, 0, 1, 1, 0, 1])),
-      (('yes', 'no'), 'v_far', np.array([0, 0, 1, 0, 0, 1, 1, 0, 1]))
+        (('no', 'yes'), 'close', np.array([0, 1, 1, 0, 0, 1, 1, 0, 0])),
+        (('no', 'yes'), 'far_lb1', np.array([1, 0, 1, 0, 1, 0, 1, 0, 0])),
+        (('no', 'yes'), 'far_lb2', np.array([0, 1, 0, 1, 0, 1, 1, 0, 0])),
+        (('no', 'yes'), 'v_far', np.array([1, 0, 0, 1, 1, 0, 1, 0, 0])),
+        (('yes', 'no'), 'close', np.array([0, 0, 0, 1, 1, 0, 1, 1, 0])),
+        (('yes', 'no'), 'far_lb1', np.array([0, 0, 1, 0, 1, 0, 1, 1, 0])),
+        (('yes', 'no'), 'far_lb2', np.array([0, 0, 0, 1, 0, 1, 1, 0, 1])),
+        (('yes', 'no'), 'v_far', np.array([0, 0, 1, 0, 0, 1, 1, 0, 1]))
     )
 
     ON_OFF = np.array(['on', 'on', 'off', 'on', 'off',
                        'off', 'off', 'on', 'on'])
     ON_OFF_TESTS = (
-      (('on', 'off'), 'close', np.array([0, 1, 1, 1, 1, 0, 0, 0, 0])),
-      (('on', 'off'), 'far_lb1', np.array([1, 0, 1, 1, 1, 0, 0, 0, 0])),
-      (('on', 'off'), 'far_lb2', np.array([0, 1, 1, 1, 0, 0, 1, 0, 0])),
-      (('on', 'off'), 'v_far', np.array([1, 0, 1, 1, 0, 0, 1, 0, 0])),
-      (('off', 'on'), 'close', np.array([0, 0, 1, 1, 0, 0, 1, 1, 0])),
-      (('off', 'on'), 'far_lb1', np.array([0, 0, 1, 1, 1, 0, 0, 1, 0])),
-      (('off', 'on'), 'far_lb2', np.array([0, 0, 1, 1, 0, 0, 1, 0, 1])),
-      (('off', 'on'), 'v_far', np.array([0, 0, 1, 1, 1, 0, 0, 0, 1]))
+        (('on', 'off'), 'close', np.array([0, 1, 1, 1, 1, 0, 0, 0, 0])),
+        (('on', 'off'), 'far_lb1', np.array([1, 0, 1, 1, 1, 0, 0, 0, 0])),
+        (('on', 'off'), 'far_lb2', np.array([0, 1, 1, 1, 0, 0, 1, 0, 0])),
+        (('on', 'off'), 'v_far', np.array([1, 0, 1, 1, 0, 0, 1, 0, 0])),
+        (('off', 'on'), 'close', np.array([0, 0, 1, 1, 0, 0, 1, 1, 0])),
+        (('off', 'on'), 'far_lb1', np.array([0, 0, 1, 1, 1, 0, 0, 1, 0])),
+        (('off', 'on'), 'far_lb2', np.array([0, 0, 1, 1, 0, 0, 1, 0, 1])),
+        (('off', 'on'), 'v_far', np.array([0, 0, 1, 1, 1, 0, 0, 0, 1]))
     )
 
-    ON = np.array(['on']*9)
+    ON = np.array(['on'] * 9)
     ON_TESTS = (
-      (('on', 'off'), 'close', np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])),
-      (('on', 'off'), 'far_lb1', np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])),
-      (('on', 'off'), 'far_lb2', np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])),
-      (('on', 'off'), 'v_far', np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])),
-      )
+        (('on', 'off'), 'close', np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])),
+        (('on', 'off'), 'far_lb1', np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])),
+        (('on', 'off'), 'far_lb2', np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])),
+        (('on', 'off'), 'v_far', np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])),
+    )
 
     run_tests(Y_N, Y_N_TESTS, verbose=True)
     run_tests(ON_OFF, ON_OFF_TESTS, verbose=False)
@@ -134,4 +129,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
