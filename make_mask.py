@@ -22,7 +22,7 @@ def make_mask(array, labels, rule):
     Supported rules: 'close', 'far_lb1', 'far_lb2', 'v_far'
     Rules represent the distance between the labels - lb1 & lb2
     '''
-    result = []
+    indices = []
 
     stack = [0]
     last = array[0]
@@ -31,31 +31,31 @@ def make_mask(array, labels, rule):
             stack.append(i)
         else:
             if stack:
-                result.append(stack[0])
-                result.append(stack[-1])
+                indices.append(stack[0])
+                indices.append(stack[-1])
                 stack = []
                 stack.append(i)
         last = item
     if stack:
-        result.append(stack[0])
-        result.append(stack[-1])
+        indices.append(stack[0])
+        indices.append(stack[-1])
     # create tuple pairs of indices of the same label
-    result = list(zip(result[::2], result[1::2]))
+    indices = list(zip(indices[::2], indices[1::2]))
     # eliminate first pair if not the starting label
     if labels[0] != array[0]:
-        result = result[1:]
+        indices = indices[1:]
     # eliminate the last pair if not a even number
-    if len(result) % 2:
-        result.pop()
-    # create tuple pairs of pair of indices of Lb1 & Lb2
-    result = zip(result[::2], result[1::2])
+    if len(indices) % 2:
+        indices.pop()
+    # create tuple pairs of pair of indices of lb1 & lb2
+    indices = zip(indices[::2], indices[1::2])
 
-    m_result = []
-    for l1, l2 in result:
-        m_result.extend(dist_ind(l1, l2, rule))
+    result = []
+    for lb1, lb2 in indices:
+        result.extend(dist_ind(lb1, lb2, rule))
 
     mask = np.zeros(len(array), dtype=int)
-    mask[m_result] = 1
+    mask[result] = 1
     return mask
 
 
