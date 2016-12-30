@@ -2,15 +2,15 @@
 import numpy as np
 
 
-def dist_ind(l1, l2, rule):
+def dist_ind(ind, rule):
     if rule == 'close':
-        return [l1[1], l2[0]]
+        return [ind[1], ind[2]]
     elif rule == 'far_lb1':
-        return [l1[0], l2[0]]
+        return [ind[0], ind[2]]
     elif rule == 'far_lb2':
-        return [l1[1], l2[1]]
+        return [ind[1], ind[3]]
     elif rule == 'v_far':
-        return [l1[0], l2[1]]
+        return [ind[0], ind[3]]
     else:
         print("Rule [{}] is not supported!".format(rule))
         raise ValueError
@@ -39,20 +39,24 @@ def make_mask(array, labels, rule):
     if stack:
         indices.append(stack[0])
         indices.append(stack[-1])
-    # create tuple pairs of indices of the same label
-    indices = list(zip(indices[::2], indices[1::2]))
+
     # eliminate first pair if not the starting label
     if labels[0] != array[0]:
-        indices = indices[1:]
+        indices = indices[2:]
     # eliminate the last pair if not a even number
     if len(indices) % 2:
-        indices.pop()
+        indices = indices[:-2]
+    # create tuple pairs of indices of the same label
+    print(indices)
+    indices = list(zip(indices[::2], indices[1::2]))
+    print(indices)
     # create tuple pairs of pair of indices of lb1 & lb2
     indices = zip(indices[::2], indices[1::2])
+    print(list(indices))
 
     result = []
-    for lb1, lb2 in indices:
-        result.extend(dist_ind(lb1, lb2, rule))
+    for ind in indices:
+        result.extend(dist_ind(ind, rule))
 
     mask = np.zeros(len(array), dtype=int)
     mask[result] = 1
