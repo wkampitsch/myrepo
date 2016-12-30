@@ -23,7 +23,6 @@ def make_mask(array, labels, rule):
     Rules represent the distance between the labels - lb1 & lb2
     '''
     indices = []
-
     stack = [0]
     last = array[0]
     for i, item in enumerate(array[1:], 1):
@@ -31,8 +30,8 @@ def make_mask(array, labels, rule):
             stack.append(i)
         else:
             if stack:
-                indices.append(stack[0])
-                indices.append(stack[-1])
+                indices.append(stack[0])   # min index
+                indices.append(stack[-1])  # max or repeat index
                 stack = []
                 stack.append(i)
         last = item
