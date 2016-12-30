@@ -39,23 +39,14 @@ def make_mask(array, labels, rule):
     if stack:
         indices.append(stack[0])
         indices.append(stack[-1])
-    print(indices)
-    print(labels[0], array[0])
     # eliminate first pair if not the starting label
     if labels[0] != array[0]:
         indices = indices[2:]
-        print("first: %s" % indices)
-    # eliminate the last pair if not a even number
-    if len(indices) % 2:
+    # eliminate the last pair to comply with lb1, lb2 pairs
+    if len(indices) / 2 % 2:
         indices = indices[:-2]
-        print("last: %s" % indices)
-    # create tuple pairs of indices of the same label
-    print(indices)
-    indices = [indices[i:i+4] for i  in range(0, len(indices), 4)]
-    print(indices)
-    # create tuple pairs of pair of indices of lb1 & lb2
-    #indices = zip(indices[::2], indices[1::2])
-    #print(list(indices))
+    # create group of 4 indices of the lb1 and lb2 pairs
+    indices = [indices[i:i + 4] for i in range(0, len(indices), 4)]
 
     result = []
     for ind in indices:
