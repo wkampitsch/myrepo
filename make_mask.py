@@ -1,5 +1,6 @@
 # coding: utf-8
 import numpy as np
+from utils import chunker
 
 
 def dist_ind(ind, rule):
@@ -44,11 +45,9 @@ def make_mask(array, labels, rule):
     # eliminate the last pair to comply with lb1, lb2 pairs
     if len(indices) / 2 % 2:
         indices = indices[:-2]
-    # create group of 4 indices of the lb1 and lb2 pairs
-    indices = [indices[i:i + 4] for i in range(0, len(indices), 4)]
 
     result = []
-    for ind in indices:
+    for ind in chunker(indices, 4):
         result.extend(dist_ind(ind, rule))
 
     mask = np.zeros(len(array), dtype=int)
